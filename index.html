@@ -14,6 +14,20 @@
             text-align: center;
             color: #333;
         }
+        .formulario {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .formulario input, .formulario textarea, .formulario button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
         .entrega {
             background: white;
             padding: 15px;
@@ -36,20 +50,39 @@
 <body>
     <h1>📦 Entregas Realizadas</h1>
 
-    <div class="entrega">
-        <img src="https://via.placeholder.com/400x300" alt="Foto da entrega">
-        <div class="descricao">
-            Esse cliente comprou um <strong>kit de beleza</strong>. Agradeço pela compra e confiança! 🙏
-        </div>
+    <div class="formulario">
+        <input type="file" id="fotoInput" accept="image/*">
+        <textarea id="descricaoInput" placeholder="Digite a descrição..."></textarea>
+        <button onclick="adicionarEntrega()">Adicionar Entrega</button>
     </div>
 
-    <div class="entrega">
-        <img src="https://via.placeholder.com/400x300" alt="Foto da entrega">
-        <div class="descricao">
-            Entrega feita com sucesso para o cliente João! Muito obrigado pela cooperação! 💚
-        </div>
-    </div>
+    <div id="listaEntregas"></div>
 
-    <!-- Você pode duplicar os blocos acima e trocar as imagens e textos -->
+    <script>
+        function adicionarEntrega() {
+            const fotoInput = document.getElementById('fotoInput');
+            const descricaoInput = document.getElementById('descricaoInput');
+            const listaEntregas = document.getElementById('listaEntregas');
+
+            if (fotoInput.files.length === 0 || descricaoInput.value.trim() === "") {
+                alert("Por favor, envie uma foto e preencha a descrição.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const entregaDiv = document.createElement('div');
+                entregaDiv.classList.add('entrega');
+                entregaDiv.innerHTML = `
+                    <img src="${e.target.result}" alt="Foto da entrega">
+                    <div class="descricao">${descricaoInput.value}</div>
+                `;
+                listaEntregas.prepend(entregaDiv);
+                descricaoInput.value = "";
+                fotoInput.value = "";
+            };
+            reader.readAsDataURL(fotoInput.files[0]);
+        }
+    </script>
 </body>
 </html>
